@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:expense_tracker/model/expense.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key, required this.onAddExpense});
@@ -8,7 +10,6 @@ class NewExpense extends StatefulWidget {
 
   @override
   State<NewExpense> createState() {
-    // TODO: implement createState
     return _NewExpense();
   }
 }
@@ -35,13 +36,25 @@ class _NewExpense extends State<NewExpense> {
     });
   }
 
-  void _submitExpenseData() {
-    final enteredAmount = double.tryParse(_amountController.text);
-    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
-
-    if (_titleController.text.trim().isEmpty ||
-        amountIsInvalid ||
-        _selectedDate == null) {
+  void _showDialog() {
+    if (Platform.isIOS) {
+      showCupertinoDialog(
+          context: context,
+          builder: (ctx) {
+            return AlertDialog(
+              title: const Text('Invalid Input'),
+              content: const Text(
+                  'Please make sure a valid title, amount, date and category was entered.'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                    },
+                    child: const Text('Okay'))
+              ],
+            );
+          });
+    } else {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -57,6 +70,17 @@ class _NewExpense extends State<NewExpense> {
           ],
         ),
       );
+    }
+  }
+
+  void _submitExpenseData() {
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+
+    if (_titleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
+      _showDialog();
       return;
     }
 
@@ -233,7 +257,7 @@ class _NewExpense extends State<NewExpense> {
                               return;
                             }
                             setState(() {
-                              _selectedCategory = value!;
+                              _selectedCategory = value;
                             });
                           }),
                       const Spacer(),
