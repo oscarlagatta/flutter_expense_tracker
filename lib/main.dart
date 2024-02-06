@@ -12,13 +12,12 @@ var kDarkColorScheme = ColorScheme.fromSeed(
 );
 
 void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
 
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp
-  ]).then((fn) {
-      runApp(
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp
+  // ]).then((fn) {
+  runApp(
     MaterialApp(
         darkTheme: ThemeData.dark().copyWith(
           // dark() no longer takes any arguments
@@ -65,6 +64,5 @@ void main() {
         // themeMode: ThemeMode.system,
         home: const Expenses()),
   );
-  } );
-
+  // } );
 }
